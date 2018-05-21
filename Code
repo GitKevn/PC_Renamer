@@ -1,0 +1,34 @@
+using System;
+using System.Diagnostics;
+using System.Configuration;
+
+namespace PCRenamer
+{
+    internal class Program
+    {
+        public void SetMachineName(string newName)
+        {
+            // Asking user for machine name input
+            Console.WriteLine("What Is this machines name?");
+            newName = Console.ReadLine();
+
+            // Start
+            ProcessStartInfo process = new ProcessStartInfo();
+
+            // Executable name
+            process.FileName = "WMIC.exe";
+
+            // pass rename PC command as argument
+            process.Arguments = "computersystem where caption='" + System.Environment.MachineName + "' rename " + newName;
+
+            // Run and wait
+            using (Process proc = Process.Start(process))
+            {
+                proc.WaitForExit();
+
+                // print the status
+                Console.WriteLine("Exit code = " + proc.ExitCode);
+            }
+        }
+    }
+}
